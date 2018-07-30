@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using checkoutClient.Models;
-using checkoutClient.Responses;
 
 namespace checkoutClient.Interfaces
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using checkoutClient.Responses;
+﻿using System.Net.Http;
 
 namespace checkoutClient.Requests
 {

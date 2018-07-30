@@ -10,6 +10,7 @@ namespace checkoutClient.Services
     public class OrdersService : IOrdersService
     {
         private const string BaseUri = "http://checkoutapi.azurewebsites.net/api/orders/";
+       // private const string BaseUri = "http://localhost:50211/api/orders/";
         
         private readonly IHttpRequestService _httpRequestService;
 

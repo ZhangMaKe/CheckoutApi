@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using checkoutClient;
 using checkoutClient.Models;
 using checkoutClient.Responses;
@@ -45,20 +43,40 @@ namespace Tests
             
         }
 
+        [Test]
+        public void CreateOrderWithItem()
+        {
+            //Arrange
+            var order = new Order();
+            order.Items.Add(new Item("item 1", 2));
+
+            //Act
+            var response = _client.OrdersService.CreateOrder(order).Result;
+            var responseObject = response.ToResponseObject<EntityApiResponse<Order>>();
+            var createdOrder = responseObject.Entity;
+
+            //Assert
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(order.Id, createdOrder.Id);
+            Assert.AreEqual(order.Items.Count, createdOrder.Items.Count);
+            Assert.AreEqual(order.Items[0].Id, createdOrder.Items[0].Id);
+        }
+
+
         #endregion
 
         #region Add Item to Order Tests
 
         [Test]
-        public void AddItemToOrderAsync()
+        public void AddItemToOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
             var item = new Item("Item1", 1);
 
             //Act
             var response = _client.OrdersService.AddItemToOrder(order.Id, item).Result;
-            var orderWithAddedItem = response.ToOrder<EntityApiResponse<Order>>();
+            var orderWithAddedItem = response.ToEntity<EntityApiResponse<Order>, Order>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -90,14 +108,14 @@ namespace Tests
         public void RemoveItemFromOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
             var item = new Item("Item1", 1);
             _client.OrdersService.AddItemToOrder(order.Id, item).Result
-                .ToOrder<EntityApiResponse<Order>>();
+                .ToEntity<EntityApiResponse<Order>, Order>();
 
             //Act
             var response = _client.OrdersService.RemoveItemFromOrder(order.Id, item.Id).Result;
-            var orderWithItemRemoved = response.ToOrder<EntityApiResponse<Order>>();
+            var orderWithItemRemoved = response.ToEntity<EntityApiResponse<Order>, Order>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -109,7 +127,7 @@ namespace Tests
         public void RemoveInvalidItemFromOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
             var item = new Item("Item1", 1);
 
             //Act
@@ -156,7 +174,7 @@ namespace Tests
         public void RemoveItemFromOrderInvalidItemId()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<EntityApiResponse<Order>>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
 
             //Act
             var response = _client.OrdersService.RemoveItemFromOrder(order.Id, new Guid()).Result;
@@ -175,10 +193,10 @@ namespace Tests
         public void UpdateItemQuantity()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
             var item = new Item("item 1", 1);
             var orderWithAddedItem = _client.OrdersService.AddItemToOrder(order.Id, item).Result
-                .ToOrder<AddItemToOrderResponse>();
+                .ToEntity<EntityApiResponse<Order>, Order>();
 
             //Act
             var newQuantity = 2;
@@ -245,7 +263,7 @@ namespace Tests
         public void UpdateItemQuantityInvalidItem()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<EntityApiResponse<Order>>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
             var item = new Item("item 1", 1);
 
             //Act
@@ -265,11 +283,11 @@ namespace Tests
         public void DeleteOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
 
             //Act
             var response = _client.OrdersService.DeleteOrder(order.Id).Result;
-            var responseObject = response.ToResponseObject<DeleteOrderResponse>();
+            var responseObject = response.ToResponseObject<BaseApiResponse>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -285,7 +303,7 @@ namespace Tests
 
             //Act
             var response = _client.OrdersService.DeleteOrder(order.Id).Result;
-            var responseObject = response.ToResponseObject<DeleteOrderResponse>();
+            var responseObject = response.ToResponseObject<BaseApiResponse>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
@@ -299,7 +317,7 @@ namespace Tests
 
             //Act
             var response = _client.OrdersService.DeleteOrder(new Guid()).Result;
-            var responseObject = response.ToResponseObject<DeleteOrderResponse>();
+            var responseObject = response.ToResponseObject<BaseApiResponse>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);

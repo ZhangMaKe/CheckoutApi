@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
-using checkoutClient.Models;
 
 namespace checkoutClient.Requests
 {

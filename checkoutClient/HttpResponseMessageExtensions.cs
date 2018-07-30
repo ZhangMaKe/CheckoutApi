@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+﻿using System.Net.Http;
 using checkoutClient.Models;
 using checkoutClient.Responses;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace checkoutClient
 {
     public static class HttpResponseMessageExtensions
     {
-        public static Order ToOrder<T>(this HttpResponseMessage httpResponseMessage) where T : EntityApiResponse<Order>
+        public static TEntity ToEntity<T, TEntity>(this HttpResponseMessage httpResponseMessage)
+            where T : EntityApiResponse<TEntity> where TEntity : BaseEntity
         {
             var content = httpResponseMessage.Content.ReadAsStringAsync().Result;
 

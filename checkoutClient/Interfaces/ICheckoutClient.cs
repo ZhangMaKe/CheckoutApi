@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using checkoutClient.Interfaces;
+﻿using checkoutClient.Interfaces;
 
 namespace checkoutClient
 {

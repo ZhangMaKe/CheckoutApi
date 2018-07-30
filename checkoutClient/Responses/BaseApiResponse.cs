@@ -6,11 +6,11 @@ using checkoutClient.Models;
 
 namespace checkoutClient.Responses
 {
-    public abstract class BaseApiResponse
+    public class BaseApiResponse
     {
         public string Message { get; set; }
 
-        protected BaseApiResponse(string message)
+        public BaseApiResponse(string message)
         {
             Message = message;
         }

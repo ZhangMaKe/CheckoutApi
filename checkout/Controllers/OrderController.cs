@@ -31,7 +31,7 @@ namespace checkout.Controllers
         [HttpPost]
         public IActionResult CreateOrder([FromBody]Order order)
         {
-            var response = new CreateOrderResponse(null, "");
+            var response = new EntityResponse<Order>(null, "");
             if (order is null)
             {
                 response.Message = "CreateOrder: request is null";
@@ -53,7 +53,7 @@ namespace checkout.Controllers
         [HttpPost("{orderId}/items")]
         public IActionResult AddItemToOrder(Guid orderId, [FromBody]Item item)
         {
-            var response = new AddItemToOrderResponse(null, "");
+            var response = new EntityResponse<Order>(null, "");
 
             var order = _orderRepository.Get(orderId);
             if (order == null)
@@ -80,7 +80,7 @@ namespace checkout.Controllers
         [HttpDelete("{orderId}/items/{itemId}")]
         public IActionResult RemoveItemFromOrder(Guid orderId, Guid itemId)
         {
-            var response = new RemoveItemFromOrderResponse(null, "");
+            var response = new EntityResponse<Order>(null, "");
             if (orderId == Guid.Empty)
             {
                 response.Message = "RemoveItemFromOrder: orderId is invalid";
@@ -126,7 +126,7 @@ namespace checkout.Controllers
         [HttpPatch("{orderId}/items/{itemId}/quantity")]
         public IActionResult UpdateItemQuantity([FromBody]int quantity, Guid orderId, Guid itemId)
         {
-            var response = new UpdateItemQuantityResponse(null, "");
+            var response = new EntityResponse<Order>(null, "");
 
             if (orderId == Guid.Empty)
             {
@@ -174,7 +174,7 @@ namespace checkout.Controllers
         [HttpDelete("{orderId}")]
         public IActionResult DeleteOrder(Guid orderId)
         {
-            var response = new DeleteOrderResponse("");
+            var response = new BaseResponse("");
 
             if (orderId == Guid.Empty)
             {
