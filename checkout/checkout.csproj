@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Requests\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

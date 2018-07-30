@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using checkout.Models;
 using checkout.Repositories;
-using checkout.Requests;
 using checkout.Responses;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace checkout.Controllers
@@ -35,16 +29,14 @@ namespace checkout.Controllers
         #region Api Methods
 
         [HttpPost]
-        public IActionResult CreateOrder(CreateOrderRequest request)
+        public IActionResult CreateOrder([FromBody]Order order)
         {
             var response = new CreateOrderResponse(null, "");
-            if (request is null)
+            if (order is null)
             {
                 response.Message = "CreateOrder: request is null";
                 return BadRequest(response);
             }
-
-            var order = new Order();
 
             if (_orderRepository.Add(order))
             {

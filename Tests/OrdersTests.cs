@@ -29,17 +29,20 @@ namespace Tests
         public void CreateOrder()
         {
             //Arrange
+            var order = new Order();
 
             //Act
-            var response = _client.OrdersService.CreateOrder().Result;
+            var response = _client.OrdersService.CreateOrder(order).Result;
             var responseObject = response.ToResponseObject<EntityApiResponse<Order>>();
-            var order = responseObject.Entity;
+            var createdOrder = responseObject.Entity;
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(typeof(Guid), order.Id.GetType());
-            Assert.AreNotEqual(Guid.Empty, order.Id);
-            Assert.AreEqual(0, order.Items.Count);
+            Assert.AreEqual(typeof(Guid), createdOrder.Id.GetType());
+            Assert.AreNotEqual(Guid.Empty, createdOrder.Id);
+            Assert.AreEqual(order.Items.Count, createdOrder.Items.Count);
+            Assert.AreEqual(order.Id, createdOrder.Id);
+            
         }
 
         #endregion
@@ -50,7 +53,7 @@ namespace Tests
         public void AddItemToOrderAsync()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
             var item = new Item("Item1", 1);
 
             //Act
@@ -87,7 +90,7 @@ namespace Tests
         public void RemoveItemFromOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
             var item = new Item("Item1", 1);
             _client.OrdersService.AddItemToOrder(order.Id, item).Result
                 .ToOrder<EntityApiResponse<Order>>();
@@ -106,7 +109,7 @@ namespace Tests
         public void RemoveInvalidItemFromOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
             var item = new Item("Item1", 1);
 
             //Act
@@ -153,7 +156,7 @@ namespace Tests
         public void RemoveItemFromOrderInvalidItemId()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<EntityApiResponse<Order>>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<EntityApiResponse<Order>>();
 
             //Act
             var response = _client.OrdersService.RemoveItemFromOrder(order.Id, new Guid()).Result;
@@ -172,7 +175,7 @@ namespace Tests
         public void UpdateItemQuantity()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
             var item = new Item("item 1", 1);
             var orderWithAddedItem = _client.OrdersService.AddItemToOrder(order.Id, item).Result
                 .ToOrder<AddItemToOrderResponse>();
@@ -242,7 +245,7 @@ namespace Tests
         public void UpdateItemQuantityInvalidItem()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<EntityApiResponse<Order>>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<EntityApiResponse<Order>>();
             var item = new Item("item 1", 1);
 
             //Act
@@ -262,7 +265,7 @@ namespace Tests
         public void DeleteOrder()
         {
             //Arrange
-            var order = _client.OrdersService.CreateOrder().Result.ToOrder<CreateOrderResponse>();
+            var order = _client.OrdersService.CreateOrder(new Order()).Result.ToOrder<CreateOrderResponse>();
 
             //Act
             var response = _client.OrdersService.DeleteOrder(order.Id).Result;

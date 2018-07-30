@@ -9,9 +9,9 @@ namespace checkout.Models
     {
         public List<Item> Items { get; set; }
 
-        public Order()
+        public Order(Guid id, List<Item> items) : base(id)
         {
-            Items = new List<Item>();
+            Items = items;
         }
     }
 }
