@@ -277,51 +277,54 @@ namespace Tests
 
         #endregion
 
-        #region Delete Order Tests
+        #region Clear Items Tests
 
         [Test]
-        public void DeleteOrder()
+        public void ClearItems()
         {
             //Arrange
             var order = _client.OrdersService.CreateOrder(new Order()).Result.ToEntity<EntityApiResponse<Order>, Order>();
+            var orderWithItem = _client.OrdersService.AddItemToOrder(order.Id, new Item("item1", 2)).Result
+                .ToEntity<EntityApiResponse<Order>, Order>();
 
             //Act
-            var response = _client.OrdersService.DeleteOrder(order.Id).Result;
-            var responseObject = response.ToResponseObject<BaseApiResponse>();
+            var response = _client.OrdersService.ClearItems(orderWithItem.Id).Result;
+            var responseObject = response.ToResponseObject<EntityApiResponse<Order>>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual("OK", responseObject.Message);
+            Assert.AreEqual(0, responseObject.Entity.Items.Count);
 
         }
 
         [Test]
-        public void DeleteInvalidOrder()
+        public void ClearItemsInvalidOrder()
         {
             //Arrange
             var order = new Order();
 
             //Act
-            var response = _client.OrdersService.DeleteOrder(order.Id).Result;
-            var responseObject = response.ToResponseObject<BaseApiResponse>();
+            var response = _client.OrdersService.ClearItems(order.Id).Result;
+            var responseObject = response.ToResponseObject<EntityApiResponse<Order>>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.AreEqual("DeleteOrder: order not found", responseObject.Message);
+            Assert.AreEqual("ClearItems: order not found", responseObject.Message);
         }
 
         [Test]
-        public void DeleteInvalidOrderId()
+        public void ClearItemsInvalidOrderId()
         {
             //Arrange
 
             //Act
-            var response = _client.OrdersService.DeleteOrder(new Guid()).Result;
-            var responseObject = response.ToResponseObject<BaseApiResponse>();
+            var response = _client.OrdersService.ClearItems(new Guid()).Result;
+            var responseObject = response.ToResponseObject<EntityApiResponse<Order>>();
 
             //Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.AreEqual("DeleteOrder: orderId is invalid", responseObject.Message);
+            Assert.AreEqual("ClearItems: orderId is invalid", responseObject.Message);
 
         }
 

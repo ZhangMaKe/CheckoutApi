@@ -62,14 +62,14 @@ namespace checkoutClient.Services
             return await _httpRequestService.PatchAsync(request);
         }
 
-        public async Task<HttpResponseMessage> DeleteOrder(Guid orderId)
+        public async Task<HttpResponseMessage> ClearItems(Guid orderId)
         {
-            var request = new DeleteOrderRequest
+            var request = new ClearItemsRequest
             {
                 Uri = new Uri(BaseUri + orderId)
             };
 
-            return await _httpRequestService.DeleteAsync(request);
+            return await _httpRequestService.PatchAsync(request);
         }
 
     }

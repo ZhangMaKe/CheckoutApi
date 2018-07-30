@@ -171,14 +171,14 @@ namespace checkout.Controllers
 
         }
 
-        [HttpDelete("{orderId}")]
-        public IActionResult DeleteOrder(Guid orderId)
+        [HttpPatch("{orderId}")]
+        public IActionResult ClearItems(Guid orderId)
         {
-            var response = new BaseResponse("");
+            var response = new EntityResponse<Order>(null, "");
 
             if (orderId == Guid.Empty)
             {
-                response.Message = "DeleteOrder: orderId is invalid";
+                response.Message = "ClearItems: orderId is invalid";
                 return BadRequest(response);
             }
 
@@ -186,17 +186,20 @@ namespace checkout.Controllers
 
             if (order == null)
             {
-                response.Message = "DeleteOrder: order not found";
+                response.Message = "ClearItems: order not found";
                 return BadRequest(response);
             }
 
-            if (_orderRepository.Remove(order))
+            order.Items.Clear();
+
+            if (_orderRepository.Update(order))
             {
+                response.Entity = order;
                 response.Message = "OK";
                 return Ok(response);
             }
 
-            response.Message = "DeleteOrder: order could not be deleted";
+            response.Message = "ClearItems: items could not be deleted";
 
             return StatusCode((int)HttpStatusCode.InternalServerError, response);
         }

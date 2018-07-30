@@ -11,6 +11,6 @@ namespace checkoutClient.Interfaces
         Task<HttpResponseMessage> AddItemToOrder(Guid orderId, Item item);
         Task<HttpResponseMessage> RemoveItemFromOrder(Guid orderId, Guid itemId);
         Task<HttpResponseMessage> UpdateItemQuantity(int quantity, Guid orderId, Guid itemId);
-        Task<HttpResponseMessage> DeleteOrder(Guid orderId);
+        Task<HttpResponseMessage> ClearItems(Guid orderId);
     }
 }
