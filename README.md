@@ -13,3 +13,9 @@ This Api allows users to:
 The Api is hosted in Azure at:
 
 https://checkoutapi.azurewebsites.net/
+
+Swagger has been implemented and is reachable from the root url of the api.
+
+The 'codocumentation.docx' file in this repository gives further information about requests, responses and errors.
+
+The 'coclientdocumentation' file gives information on how to use the Client.
