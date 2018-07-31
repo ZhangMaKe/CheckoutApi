@@ -12,12 +12,14 @@ namespace checkoutClient.Services
         private const string BaseUri = "http://checkoutapi.azurewebsites.net/api/orders/";
        // private const string BaseUri = "http://localhost:50211/api/orders/";
         
-        private readonly IHttpRequestService _httpRequestService;
+        public IHttpRequestService HttpRequestService { get; set; }
 
         public OrdersService(IHttpRequestService httpRequestService)
         {
-            _httpRequestService = httpRequestService;
+            HttpRequestService = httpRequestService;
         }
+       
+
         public async Task<HttpResponseMessage> CreateOrder(Order order)
         {
             var request = new CreateOrderRequest
@@ -27,7 +29,7 @@ namespace checkoutClient.Services
                 HttpContent = HttpHelperService.CreateHttpContent(order)
             };
 
-            return await _httpRequestService.PostAsync(request);
+            return await HttpRequestService.PostAsync(request);
         }
 
         public async Task<HttpResponseMessage> AddItemToOrder(Guid orderId, Item item)
@@ -38,7 +40,7 @@ namespace checkoutClient.Services
                 HttpContent = HttpHelperService.CreateHttpContent(item)
             };
 
-            return await _httpRequestService.PostAsync(request);
+            return await HttpRequestService.PostAsync(request);
         }
 
         public async Task<HttpResponseMessage> RemoveItemFromOrder(Guid orderId, Guid itemId)
@@ -48,7 +50,7 @@ namespace checkoutClient.Services
                 Uri = new Uri(BaseUri + orderId + "/items/" + itemId)
             };
 
-            return await _httpRequestService.DeleteAsync(request);
+            return await HttpRequestService.DeleteAsync(request);
         }
 
         public async Task<HttpResponseMessage> UpdateItemQuantity(int quantity, Guid orderId, Guid itemId)
@@ -59,7 +61,7 @@ namespace checkoutClient.Services
                 HttpContent = HttpHelperService.CreateHttpContent(quantity)
             };
 
-            return await _httpRequestService.PatchAsync(request);
+            return await HttpRequestService.PatchAsync(request);
         }
 
         public async Task<HttpResponseMessage> ClearItems(Guid orderId)
@@ -69,7 +71,7 @@ namespace checkoutClient.Services
                 Uri = new Uri(BaseUri + orderId)
             };
 
-            return await _httpRequestService.PatchAsync(request);
+            return await HttpRequestService.PatchAsync(request);
         }
 
     }

@@ -7,6 +7,7 @@ namespace checkoutClient.Interfaces
 {
     public interface IOrdersService
     {
+        IHttpRequestService HttpRequestService { get; set; }
         Task<HttpResponseMessage> CreateOrder(Order order);
         Task<HttpResponseMessage> AddItemToOrder(Guid orderId, Item item);
         Task<HttpResponseMessage> RemoveItemFromOrder(Guid orderId, Guid itemId);
